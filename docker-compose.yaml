@@ -1,0 +1,8 @@
+services:
+  phpwebserver:
+    build: .
+    volumes:
+      - ./src:/var/www/html:z
+    ports:
+      - 80:80
+    
