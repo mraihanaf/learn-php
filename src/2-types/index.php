@@ -31,7 +31,7 @@
         echo get_debug_type($a_str), "\n";
 
         $a_null = null;
-        is_null($A_null);
+        is_null($a_null);
         $a_true_bool = true;
         $a_false_bool = false;
     ?>
@@ -192,8 +192,208 @@
         // delete the whole array
 
         unset($arrExample);
+
+        // delete the whole elements
+        $arrExample = array("foo", "bar", "hello", "world!");
+        
         echo var_dump($arrExample), "<br>";
+        foreach ($arrExample as $i => $value){
+            unset($arrExample[$i]);
+        }
+
+        echo var_dump($arrExample), "<br>";
+
+        // array destructuring
+
+        $source_array = ['foo', 'bar', 'baz'];
+        [$foo, $bar, $baz] = $source_array;
+
+        echo $foo, "<br>";
+        echo $bar, "<br>";
+        echo $baz, "<br>";
+        
+        // array destructuing using foreach
+
+        $source_array = [
+            [1, 'John'],
+            [2, 'Jane']
+        ];
+
+        foreach ($source_array as [$id, $name]) {
+            echo "{$id}: '{$name}' <br>";
+        }
+
+        // ignoring elements
+
+        $source_array = ['foo', 'bar', 'baz'];
+        [, , $baz] = $source_array;
+
+        echo $baz, "<br>";
+
+        // destructuring associative arrays
+        $source_array = ['foo' => 1, 'bar' => 2, 'jazz' => 3];
+        ['jazz' => $three] = $source_array;
+
+        echo $three, "<br>";
+        
+        $source_array = ['foo', 'bar', 'jazz'];
+        [2 => $baz] = $source_array;
+        echo $baz, "<br>";
+
+        // swapping two variables
+        $a = 1;
+        $b = 2;
+
+        [$b, $a] = [$a, $b];
+        echo $a, "<br>";
+        echo $b, "<br>";
+
+        // array unpacking
+        $arr1 = [1,2,3];
+        $arr2 = [...$arr1];
+
+        echo var_dump($arr2), "<br>";
+        
+        /*
+            Note: 
+            Prior to PHP 8.1, unpacking an array which has a string key is not supported: 
+        */
+
+        // array as map
+
+        $map = [
+            'version'       => 4,
+            'OS'            => 'Linux',
+            'lang'          => 'english',
+            'short_tags'    => true
+        ];
+
+        // array as collection
+        
+        $colors = ['red', 'green', 'blue'];
+
+        foreach($colors as $color){
+            echo $color, "<br>";
+        } 
+
+        foreach($colors as $color){
+            $color = mb_strtoupper($color);
+            echo $color, "<br>";
+        }
+
+        unset($color);
+        
+        // sorting an array
+
+        $sort_example = [3,1,2];
+        sort($sort_example);
+        echo var_dump($sort_example), "<br>";
+
+        // recursive and multi dimensional array
+
+        $fruits = array(
+            "fruits" => array(
+                "a" => "orange",
+                "b" => "banana",
+                "c" => "apple"
+            ),
+            "numbers" => array (1,2,3,4,5,6),
+            "holes" => array(
+                "first",
+                5 => "second",
+                "third"
+            )
+            
+        );
+
+        echo var_dump($fruits), "<br><br>";
+
+        // array copying
+        $arr1 = array(2, 3);
+        $arr2 = $arr1;
+        $arr2[] = 4; // $arr2 is changed,
+        // $arr1 is still array(2, 3)
+
+        // reference
+        $arr3 = &$arr1;
+        $arr3[] = 4; // now $arr1 and $arr3 are the same
+
+        echo var_dump($arr1, $arr2, $arr3), "<br>";
+
     ?>
 
+    <h2>Object</h2>
+
+    <?php
+        class foo {
+            function do_foo(){
+                echo "do foo";
+            }
+        }
+
+        $bar = new foo;
+        $bar->do_foo()
+    ?>
+
+    <h2>Enum</h2>
+    <?php
+        enum Suit: string {
+            case Hearts = "hearts";
+            case Diamonds = "diamonds";
+            case Clubs = "clubs";
+            case Spades = "spades";
+        }
+
+        function do_stuff(Suit $s){
+            echo $s->name, " : ", $s->value, "<br>";
+        }
+
+        do_stuff(Suit::Spades);
+    ?>
+
+    <h2>Callable (Callback) and void</h2>
+    <?php
+        function foo(callable $cb): void {
+            $cb();
+        }
+
+        foo(function(){
+            echo "Hello world!", "<br>";
+        })
+    ?>
+
+    <h2>Iterables</h2>
+    <?php
+        function gen(): iterable {
+            yield 1;
+            yield 2;
+            yield 3;
+        }
+
+        foreach(gen() as $value){
+            echo $value, "<br>";
+        }
+    ?>
+
+    <h2>Type declarations</h2>
+    <?php
+        function test(string $param): string {
+            return "yeyes";
+        }
+
+        $str = "yey";
+
+        function rfrTest(string &$must_be_rfr): string {
+            return "rfryes";
+        }
+
+        function optionalParamExample(?string $optional_param = null): string {
+            return "optionalExample";
+        }
+
+        echo test("test"), "<br>";
+        echo rfrTest($str), "<br>";
+        echo optionalParamExample(), "<br>";
+    ?>
 </body>
 </html>
